@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ETS Desain Instruksional Matematika ICT</title>
+<style>
+:root{
+  --bg:#edf1ee; --card:#ffffff; --ink:#1b2a33; --muted:#5a6a72; --line:#d3dcd7;
+  --deep:#13232b; --deep2:#1d3540;
+  --done:#0e7c6b; --done-soft:#e3f3ef;
+  --flag:#f0ae1b; --flag-ink:#4a3300;
+  --danger:#bf3a2b; --danger-soft:#fbe9e6;
+  --focus:#2563eb;
+  --serif:"Iowan Old Style","Charter","Georgia","Cambria",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+textarea,input[type=text]{-webkit-user-select:text;user-select:text}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.hidden{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Layar mulai ---------- */
+#screen-start{min-height:100vh;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.hero{background:var(--deep);color:#e8f1ee;padding:48px clamp(24px,5vw,72px);position:relative;overflow:hidden;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:32px 32px;display:flex;flex-direction:column;justify-content:space-between;gap:32px}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,4.2vw,3.2rem);line-height:1.1;margin:0 0 14px;letter-spacing:-.01em}
+.hero .mk{font-size:1.15rem;color:#b8d2cb;margin:0;max-width:30ch}
+.facts{display:flex;gap:28px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.facts li{display:flex;flex-direction:column}
+.facts b{font-family:var(--serif);font-size:2.2rem;line-height:1;font-weight:600;color:#fff}
+.facts span{font-size:.9rem;color:#a9c4bd}
+.plot{width:100%;max-width:520px;height:auto}
+.plot .ax{stroke:#7fa59b;stroke-width:1.5}
+.plot .cv{fill:none;stroke:#f0ae1b;stroke-width:3}
+.plot .rc{fill:rgba(14,124,107,.55);stroke:#5fd1bb;stroke-width:1;transform-box:fill-box;transform-origin:bottom;animation:grow .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.formwrap{display:flex;align-items:center;justify-content:center;padding:40px clamp(20px,4vw,56px)}
+.formcard{width:100%;max-width:460px}
+.formcard h2{font-family:var(--serif);font-size:1.7rem;margin:0 0 4px}
+.formcard .sub{color:var(--muted);margin:0 0 22px}
+.field{margin-bottom:16px}
+.field label{display:block;font-weight:600;margin-bottom:6px}
+.field input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;background:#fff;font:inherit;color:var(--ink)}
+.field input:focus{border-color:var(--done);outline:3px solid rgba(14,124,107,.25);outline-offset:0}
+.field input:disabled{background:#f1f4f2;color:var(--muted)}
+.rules{background:#fff;border:1px solid var(--line);border-left:4px solid var(--flag);border-radius:8px;padding:14px 16px;margin:18px 0}
+.rules h3{margin:0 0 8px;font-size:1rem}
+.rules ul{margin:0;padding-left:20px;font-size:.93rem;color:#33454e}
+.rules li{margin:3px 0}
+.agree{display:flex;gap:10px;align-items:flex-start;margin:0 0 18px;font-size:.95rem;cursor:pointer}
+.agree input{margin-top:4px;width:18px;height:18px;accent-color:var(--done)}
+.btn{border:0;border-radius:8px;padding:12px 20px;font-weight:600;background:var(--done);color:#fff;transition:background .15s}
+.btn:hover{background:#0b6657}
+.btn:disabled{background:#a9b8b2;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.ghost:hover{background:#f1f4f2}
+.btn.danger{background:var(--danger)}
+.btn.danger:hover{background:#a53022}
+.btn.block{width:100%;padding:14px}
+.err{color:var(--danger);font-size:.93rem;margin:8px 0 0;min-height:1.2em}
+
+/* ---------- Layar ujian ---------- */
+#screen-exam{min-height:100vh;display:flex;flex-direction:column}
+.top{background:var(--deep);color:#fff;display:flex;align-items:center;gap:16px;padding:10px clamp(12px,2.5vw,28px);position:sticky;top:0;z-index:20}
+.top .brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.top .brand svg{flex:none}
+.top .t1{font-family:var(--serif);font-weight:600;font-size:1.05rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .t2{font-size:.78rem;color:#a9c4bd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who{text-align:right;line-height:1.2;min-width:0}
+.who b{display:block;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who span{font-size:.8rem;color:#a9c4bd}
+.viol{font-size:.8rem;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.1);white-space:nowrap}
+.viol.has{background:var(--flag);color:var(--flag-ink);font-weight:600}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:1.55rem;letter-spacing:.02em;background:rgba(255,255,255,.1);padding:4px 14px;border-radius:8px;min-width:104px;text-align:center}
+.timer.warn{background:var(--flag);color:var(--flag-ink)}
+.timer.crit{background:var(--danger);color:#fff;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.7}}
+.bar{height:5px;background:#0b171c}
+.bar i{display:block;height:100%;width:100%;background:var(--done);transition:width .3s linear,background .3s}
+.bar i.warn{background:var(--flag)} .bar i.crit{background:var(--danger)}
+
+.layout{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:20px;width:100%;max-width:1220px;margin:0 auto;padding:20px clamp(12px,2.5vw,28px) 28px}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:clamp(18px,3vw,32px);display:flex;flex-direction:column}
+.qhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.qno{font-family:var(--serif);font-size:2rem;font-weight:600;line-height:1;margin-right:4px}
+.qno small{font-size:.9rem;color:var(--muted);font-family:var(--sans);font-weight:400;margin-left:6px}
+.chip{font-size:.78rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted);background:#f6f8f7}
+.chip.hots{background:#e8eefc;border-color:#c7d5f6;color:#243d86}
+.chip.lots{background:#e9f3ea;border-color:#c9e0cc;color:#245a2c}
+.chip.flagc{background:var(--flag);border-color:var(--flag);color:var(--flag-ink);font-weight:600}
+.qtext{font-family:var(--serif);font-size:1.18rem;line-height:1.7;max-width:68ch;margin:0 0 22px}
+.qtext p{margin:0 0 12px}
+.qtext .task{border-left:4px solid var(--done);background:var(--done-soft);padding:10px 14px;border-radius:0 8px 8px 0;font-family:var(--sans);font-size:1rem;line-height:1.6}
+.opts{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;border:0}
+.opt{display:flex;gap:14px;align-items:flex-start;padding:13px 16px;border:1.5px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover{border-color:#94b8af;background:#f7fbf9}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt .lt{flex:none;width:32px;height:32px;border-radius:50%;border:1.5px solid #9db0a9;display:grid;place-items:center;font-weight:700;font-size:.95rem;color:var(--muted);background:#fff}
+.opt .tx{font-family:var(--serif);font-size:1.05rem;line-height:1.55;padding-top:3px}
+.opt:has(input:checked){border-color:var(--done);background:var(--done-soft)}
+.opt:has(input:checked) .lt{background:var(--done);border-color:var(--done);color:#fff}
+.opt:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
+.essay textarea{width:100%;min-height:260px;padding:14px 16px;border:1.5px solid var(--line);border-radius:10px;font-family:var(--serif);font-size:1.05rem;line-height:1.65;resize:vertical;color:var(--ink)}
+.essay textarea:focus{border-color:var(--done);outline:3px solid rgba(14,124,107,.25);outline-offset:0}
+.essay .meta{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:var(--muted);margin-top:6px}
+.actions{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:26px;padding-top:18px;border-top:1px solid var(--line);flex-wrap:wrap}
+.flagtog{display:flex;gap:8px;align-items:center;font-weight:600;cursor:pointer;padding:10px 14px;border-radius:8px;border:1.5px solid var(--line);background:#fff}
+.flagtog input{width:18px;height:18px;accent-color:var(--flag)}
+.flagtog:has(input:checked){background:#fff6dc;border-color:var(--flag)}
+
+.side{position:sticky;top:96px;align-self:start;display:flex;flex-direction:column;gap:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.panel h3{margin:0 0 10px;font-size:1rem}
+.panel h4{margin:14px 0 8px;font-size:.88rem;color:var(--muted);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.nb{position:relative;height:44px;border-radius:8px;border:1.5px solid #b7c4be;background:#fff;color:var(--ink);font-weight:700;transition:transform .08s}
+.nb:hover{transform:translateY(-1px)}
+.nb.done{background:var(--done);border-color:var(--done);color:#fff}
+.nb.flag{background:var(--flag);border-color:var(--flag);color:var(--flag-ink)}
+.nb.flag::after{content:"";position:absolute;top:0;right:0;border-style:solid;border-width:0 12px 12px 0;border-color:transparent var(--deep) transparent transparent;border-top-right-radius:6px}
+.nb.cur{box-shadow:0 0 0 3px var(--deep)}
+.legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:.9rem}
+.legend li{display:flex;align-items:center;gap:10px}
+.legend .sw{width:22px;height:22px;border-radius:5px;border:1.5px solid #b7c4be;background:#fff;flex:none}
+.legend .sw.done{background:var(--done);border-color:var(--done)}
+.legend .sw.flag{background:var(--flag);border-color:var(--flag)}
+.legend .sw.cur{box-shadow:0 0 0 2px var(--deep);border-color:#b7c4be}
+.legend em{margin-left:auto;font-style:normal;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ---------- Lapisan (overlay) ---------- */
+.ov{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:rgba(19,35,43,.94)}
+.ov.light{background:rgba(19,35,43,.6)}
+.dlg{background:#fff;border-radius:14px;max-width:480px;width:100%;padding:28px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.dlg h2{margin:0 0 8px;font-family:var(--serif);font-size:1.5rem}
+.dlg p{margin:0 0 14px;color:#33454e}
+.dlg .row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+.dlg.warn{border-top:6px solid var(--danger)}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.stat3 div{background:#f3f6f4;border-radius:8px;padding:10px;text-align:center}
+.stat3 b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums}
+.stat3 span{font-size:.8rem;color:var(--muted)}
+#wm{position:fixed;inset:0;pointer-events:none;z-index:50;background-repeat:repeat}
+
+/* ---------- Hasil ---------- */
+#screen-result{min-height:100vh;padding:32px 16px;display:flex;justify-content:center}
+.res{width:100%;max-width:720px}
+.res h1{font-family:var(--serif);font-size:2rem;margin:0 0 4px}
+.res .lead{color:var(--muted);margin:0 0 20px}
+.score{display:flex;align-items:center;gap:22px;background:var(--deep);color:#fff;border-radius:14px;padding:22px 26px;margin-bottom:16px;flex-wrap:wrap}
+.score b{font-family:var(--serif);font-size:4rem;line-height:1;font-weight:600}
+.score span{color:#b8d2cb}
+table.kv{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.kv th,table.kv td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+table.kv th{width:42%;color:var(--muted);font-weight:600;background:#f6f8f7}
+table.kv tr:last-child th,table.kv tr:last-child td{border-bottom:0}
+.vlist{margin:0;padding-left:18px}
+.note{background:#fff6dc;border:1px solid #f0d58a;border-radius:10px;padding:12px 14px;margin:16px 0;font-size:.93rem}
+.res .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;word-break:break-all}
+
+@media (max-width:980px){
+  #screen-start{grid-template-columns:1fr}
+  .hero{padding:32px 20px;gap:24px}
+  .plot{max-width:360px}
+  .layout{grid-template-columns:1fr}
+  .side{position:static;order:2}
+  .who{display:none}
+  .top .t2{display:none}
+}
+@media (max-width:520px){
+  .timer{font-size:1.2rem;min-width:84px;padding:4px 8px}
+  .viol{display:none}
+  .grid{grid-template-columns:repeat(6,1fr);gap:6px}
+  .nb{height:40px}
+  .actions .btn,.actions .flagtog{flex:1 1 auto;justify-content:center;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .plot .rc{animation:none}.timer.crit{animation:none}*{transition:none!important}
+}
+@media print{
+  body{background:#fff}
+  .res .row,.noprint{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="wm" class="hidden" aria-hidden="true"></div>
+
+<!-- ===================== LAYAR MULAI ===================== -->
+<section id="screen-start">
+  <div class="hero">
+    <div>
+      <h1>Evaluasi Tengah Semester</h1>
+      <p class="mk">Desain Instruksional Pembelajaran Matematika Berbasis ICT</p>
+    </div>
+    <svg id="plot" class="plot" viewBox="0 0 420 250" role="img" aria-label="Ilustrasi pias persegi panjang di bawah kurva"></svg>
+    <ul class="facts">
+      <li><b>20</b><span>pilihan ganda</span></li>
+      <li><b>3</b><span>soal esai</span></li>
+      <li><b id="factMin">35</b><span>menit</span></li>
+    </ul>
+  </div>
+
+  <div class="formwrap">
+    <form class="formcard" id="startForm" autocomplete="off" novalidate>
+      <h2 id="startTitle">Isi identitas Anda</h2>
+      <p class="sub" id="startSub">Data ini tercatat di hasil ujian dan di watermark layar.</p>
+
+      <div class="field">
+        <label for="inNama">Nama lengkap</label>
+        <input id="inNama" type="text" maxlength="60" placeholder="Nama sesuai KRS" required>
+      </div>
+      <div class="field">
+        <label for="inKelas">Kelas</label>
+        <input id="inKelas" type="text" maxlength="30" placeholder="Contoh: PMA 5A" required>
+      </div>
+
+      <div class="rules" id="rulesBox">
+        <h3>Aturan pengawasan</h3>
+        <ul>
+          <li>Ujian berjalan dalam mode layar penuh.</li>
+          <li>Dilarang berpindah tab, membuka jendela lain, atau keluar dari layar penuh.</li>
+          <li>Salin, tempel, klik kanan, dan tombol pintasan inspeksi dinonaktifkan.</li>
+          <li>Setiap pelanggaran dicatat. Pelanggaran ke-<span class="maxv">3</span> menghentikan ujian dan jawaban langsung dikumpulkan.</li>
+          <li>Waktu tidak berhenti saat halaman dimuat ulang atau ditutup.</li>
+        </ul>
+      </div>
+
+      <label class="agree" id="agreeRow">
+        <input type="checkbox" id="inAgree">
+        <span>Saya sudah membaca aturan di atas dan mengerjakan ujian ini secara mandiri.</span>
+      </label>
+
+      <button class="btn block" id="btnStart" type="submit" disabled>Mulai ujian</button>
+      <p class="err" id="startErr" role="alert"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== LAYAR UJIAN ===================== -->
+<section id="screen-exam" class="hidden">
+  <header class="top">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#1d3540"/><path d="M6 27 Q17 -4 28 27" fill="none" stroke="#f0ae1b" stroke-width="2.6" stroke-linecap="round"/><line x1="6" y1="28" x2="28" y2="28" stroke="#7fa59b" stroke-width="1.6"/></svg>
+      <div style="min-width:0">
+        <div class="t1">Evaluasi Tengah Semester</div>
+        <div class="t2">Desain Instruksional Pembelajaran Matematika Berbasis ICT</div>
+      </div>
+    </div>
+    <div class="who"><b id="whoName"></b><span id="whoClass"></span></div>
+    <div class="viol" id="violBadge">Pelanggaran 0/3</div>
+    <div class="timer" id="timer" role="timer" aria-live="off">35:00</div>
+  </header>
+  <div class="bar"><i id="barFill"></i></div>
+
+  <div class="layout">
+    <main class="qcard" id="qcard">
+      <div class="qhead" id="qhead"></div>
+      <div id="qbody"></div>
+      <div class="actions">
+        <button class="btn ghost" id="btnPrev" type="button">Sebelumnya</button>
+        <label class="flagtog" id="flagWrap"><input type="checkbox" id="flagBox"> Ragu-ragu</label>
+        <button class="btn" id="btnNext" type="button">Simpan dan lanjut</button>
+      </div>
+    </main>
+
+    <aside class="side" aria-label="Navigasi soal">
+      <div class="panel">
+        <h3>Daftar soal</h3>
+        <h4>Pilihan ganda</h4>
+        <div class="grid" id="gridPG"></div>
+        <div id="essayNavWrap">
+          <h4>Esai</h4>
+          <div class="grid" id="gridES"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Status pengerjaan</h3>
+        <ul class="legend">
+          <li><span class="sw done"></span>Sudah dikerjakan<em id="cDone">0</em></li>
+          <li><span class="sw"></span>Belum dikerjakan<em id="cTodo">0</em></li>
+          <li><span class="sw flag"></span>Ragu-ragu<em id="cFlag">0</em></li>
+          <li><span class="sw cur"></span>Soal yang sedang dibuka</li>
+        </ul>
+      </div>
+      <button class="btn danger block" id="btnFinish" type="button">Selesaikan ujian</button>
+    </aside>
+  </div>
+</section>
+
+<!-- ===================== LAYAR HASIL ===================== -->
+<section id="screen-result" class="hidden">
+  <div class="res">
+    <h1 id="resTitle">Ujian selesai</h1>
+    <p class="lead" id="resLead"></p>
+    <div class="score" id="scoreBox">
+      <b id="scoreNum">0</b>
+      <div><div style="font-weight:600;font-size:1.1rem">Nilai pilihan ganda</div><span id="scoreSub"></span></div>
+    </div>
+    <table class="kv" id="resTable"></table>
+    <div class="note" id="resNote"></div>
+    <div class="row noprint">
+      <button class="btn" id="btnDlJson" type="button">Unduh hasil (.json)</button>
+      <button class="btn ghost" id="btnDlTxt" type="button">Unduh laporan (.txt)</button>
+      <button class="btn ghost" id="btnPrint" type="button">Cetak bukti</button>
+    </div>
+    <p class="err" id="submitStat" style="color:var(--muted)"></p>
+  </div>
+</section>
+
+<!-- ===================== OVERLAY ===================== -->
+<div class="ov hidden" id="ovWarn" role="alertdialog" aria-modal="true" aria-labelledby="warnTitle">
+  <div class="dlg warn">
+    <h2 id="warnTitle">Pelanggaran terdeteksi</h2>
+    <p id="warnMsg"></p>
+    <p id="warnCount" style="font-weight:700"></p>
+    <div class="row"><button class="btn" id="btnResume" type="button">Kembali ke ujian</button></div>
+  </div>
+</div>
+
+<div class="ov light hidden" id="ovConfirm" role="dialog" aria-modal="true" aria-labelledby="cfTitle">
+  <div class="dlg">
+    <h2 id="cfTitle">Selesaikan ujian?</h2>
+    <p>Setelah dikumpulkan, jawaban tidak bisa diubah.</p>
+    <div class="stat3">
+      <div><b id="cfDone">0</b><span>dikerjakan</span></div>
+      <div><b id="cfTodo">0</b><span>belum</span></div>
+      <div><b id="cfFlag">0</b><span>ragu-ragu</span></div>
+    </div>
+    <p id="cfHint" style="font-size:.93rem"></p>
+    <div class="row">
+      <button class="btn ghost" id="btnCfBack" type="button">Kembali ke soal</button>
+      <button class="btn danger" id="btnCfOk" type="button">Ya, kumpulkan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   PENGATURAN — ubah di sini
+   ============================================================ */
+const CONFIG = {
+  DURATION_MIN: 35,        // durasi ujian (menit)
+  MAX_VIOLATIONS: 3,       // pelanggaran ke-N menghentikan ujian otomatis
+  SHUFFLE_QUESTIONS: true, // acak urutan soal pilihan ganda tiap mahasiswa
+  SHUFFLE_OPTIONS: true,   // acak urutan opsi A–E tiap mahasiswa
+  INCLUDE_ESSAY: true,     // sertakan 3 soal esai
+  SHOW_SCORE: true,        // tampilkan nilai PG ke mahasiswa setelah selesai
+  SUBMIT_URL: "",          // opsional: URL Google Apps Script/endpoint untuk menerima hasil (POST JSON)
+  STORAGE_KEY: "ets-dipmbict-v1"
+};
+
+/* Kunci jawaban pilihan ganda 1–20 (disandikan agar tidak terbaca sekilas) */
+const KEY = atob("Q0JDRURCQkNDQ0RCQkJCQkJDQ0I=");
+
+/* ============================================================
+   BANK SOAL
+   ============================================================ */
+const PG = [
+ {l:"LOTS",s:1,q:"Manakah di bawah ini yang paling tepat menggambarkan peran dasar ICT dalam desain instruksional pembelajaran matematika?",
+  o:["Menggantikan peran guru secara total dalam menjelaskan konsep abstrak.","Menjadi alat bantu untuk mempercepat proses administrasi nilai siswa.","Sebagai media integratif untuk memfasilitasi visualisasi, eksplorasi, dan pemahaman konsep matematika.","Alat wajib untuk mengubah semua bentuk asesmen menjadi berbasis online.","Hiburan bagi siswa agar tidak bosan saat pembelajaran matematika berlangsung."]},
+ {l:"HOTS",s:1,q:"Di sebuah sekolah, seorang guru menggunakan teknologi simulasi visual hanya untuk menampilkan rumus-rumus matematika yang sudah ada di buku cetak tanpa adanya interaksi atau eksplorasi dari siswa. Berdasarkan semangat “Cinta Ilmu” dan konsep dasar peran ICT dalam desain instruksional, tindakan guru tersebut kurang tepat karena...",
+  o:["Mengabaikan penggunaan kertas yang lebih ramah lingkungan.","Teknologi hanya digunakan sebagai substitusi pasif, sehingga gagal menumbuhkan hasrat eksplorasi dan rasa ingin tahu ilmiah siswa.","Mengurangi waktu guru untuk memberikan latihan soal secara konvensional.","Aplikasi simulasi visual selalu membutuhkan biaya lisensi yang sangat mahal.","Membuat siswa menjadi terlalu bergantung pada gawai untuk menghitung angka dasar."]},
+ {l:"LOTS",s:1,q:"Salah satu peran ICT yang mendukung aspek kognitif siswa dalam mempelajari matematika yang bersifat abstrak adalah...",
+  o:["Menyediakan kalkulator untuk menyelesaikan semua soal ujian matematika.","Memindahkan teks buku cetak ke dalam format PDF agar mudah dibaca.","Menyediakan representasi dinamis yang menjembatani konsep abstrak ke visual.","Membantu guru membuat daftar hadir otomatis di kelas.","Menghapus kebutuhan siswa untuk menggambar grafik secara manual di buku."]},
+ {l:"LOTS",s:2,q:"Komponen dalam kerangka kerja TPACK yang merepresentasikan pemahaman guru tentang cara memfasilitasi penyampaian materi matematika tertentu dengan strategi pedagogi menggunakan teknologi yang tepat disebut...",
+  o:["Content Knowledge (CK)","Technological Knowledge (TK)","Pedagogical Knowledge (PK)","Technological Content Knowledge (TCK)","Technological Pedagogical Content Knowledge (TPACK)"]},
+ {l:"HOTS",s:2,q:"Bu Widya ingin mengajarkan materi <em>Volume Bangun Ruang Sisi Lengkung</em>. Beliau menguasai rumus volume dengan sangat baik (CK) dan mahir mengoperasikan software animasi 3D (TK). Namun, saat di kelas, beliau langsung mendemonstrasikan rumus kompleks lewat animasi tersebut tanpa memberikan panduan pemicu masalah atau diskusi, sehingga siswa kebingungan. Berdasarkan kerangka TPACK, kelemahan mendasar Bu Widya terletak pada...",
+  o:["Rendahnya kemampuan mengoperasikan software animasi (TK).","Kurangnya pemahaman terhadap rumus volume bangun ruang (CK).","Tidak adanya integrasi antara teknologi dan konten rumus (TCK).","Kurangnya pemahaman dalam memadukan strategi pengajaran yang tepat dengan teknologi dan materi tersebut (TPK/TPACK).","Ketidakmampuan guru dalam mengelola kondisi fisik ruang laboratorium komputer."]},
+ {l:"LOTS",s:2,q:"Menurut Prinsip Multimedia dari Richard E. Mayer, siswa akan belajar lebih baik apabila informasi disajikan melalui...",
+  o:["Teks narasi yang sangat panjang dan detail tanpa gambar pendukung.","Kata-kata yang dipadukan dengan gambar/visual yang relevan daripada kata-kata saja.","Gambar animasi bergerak yang ramai meskipun tidak berhubungan dengan materi.","Teks tertulis di layar yang dibacakan ulang secara persis oleh narator suara.","Musik latar yang merdu sepanjang penjelasan materi matematika."]},
+ {l:"HOTS",s:2,q:"Perhatikan ilustrasi berikut! Dalam sebuah slide PowerPoint materi <em>Fungsi Kuadrat</em>, seorang guru menampilkan definisi fungsi, grafik parabola, langkah penyelesaian soal, gambar dekorasi kartun bergerak di pojok layar, serta memutar musik instrumental yang cukup keras. Menurut Prinsip Koherensi (<em>Coherence Principle</em>) dari Mayer, desain multimedia ini dinilai buruk karena...",
+  o:["Warna grafik parabola tidak kontras dengan warna latar belakang slide.","Elemen dekoratif dan musik latar bertindak sebagai distraksi (<em>extraneous material</em>) yang membebani kognitif siswa.","Tidak mencantumkan nama penemu rumus fungsi kuadrat secara lengkap.","Memadukan teks tertulis dengan gambar grafik dalam satu slide.","Slide tersebut tidak otomatis berpindah ke halaman berikutnya."]},
+ {l:"LOTS",s:2,q:"Prinsip Mayer yang menyatakan bahwa manusia belajar lebih baik jika kata-kata dan gambar yang terkait diletakkan berdekatan atau disajikan secara bersamaan di dalam layar dinamakan...",
+  o:["Prinsip Redundansi","Prinsip Koherensi","Prinsip Keselarasan Spasial / Temporal (<em>Contiguity Principle</em>)","Prinsip Keberhasilan Modalitas","Prinsip Segmentasi"]},
+ {l:"LOTS",s:3,q:"Dalam menentukan kriteria pemilihan media pembelajaran matematika, aspek utama yang harus menjadi pertimbangan kesesuaian secara linier adalah...",
+  o:["Harga software, keindahan estetika media, dan tren teknologi terkini.","Kemudahan instalasi aplikasi, jumlah halaman, dan merek komputer sekolah.","Karakteristik materi matematika, tujuan pembelajaran, dan karakteristik siswa.","Kebijakan kepala sekolah, ketersediaan kuota internet, dan durasi jam istirahat.","Popularitas media di media sosial, jumlah warna yang digunakan, dan hobi guru."]},
+ {l:"HOTS",s:3,q:"Materi <em>Teorema Pythagoras</em> pada tingkat SMP memiliki karakteristik prosedural sekaligus konseptual yang membutuhkan pembuktian visual luas persegi. Jika karakteristik mayoritas siswa di kelas tersebut adalah pembelajar kinestetik dan visual dengan tingkat fokus yang pendek, maka kombinasi desain multimedia dan kriteria media yang paling tepat adalah...",
+  o:["Menyediakan modul cetak tebal berisi 50 soal latihan konvensional tentang segitiga siku-siku.","Menayangkan video dokumenter berdurasi 60 menit tentang sejarah hidup Pythagoras secara runtut.","Menggunakan media manipulatif digital interaktif pendek di mana siswa bisa menggeser/menyusun puzzle persegi secara mandiri untuk membuktikan rumus.","Menampilkan slide presentasi statis yang berisi pembuktian rumus secara aljabar murni tanpa gambar.","Meminta siswa menghafal Tripel Pythagoras secara klasikal di depan kelas satu per satu."]},
+ {l:"LOTS",s:3,q:"Karakteristik materi matematika yang berfokus pada langkah-langkah sistematis, runut, dan logis untuk menyelesaikan suatu komputasi atau operasi matematika disebut jenis materi...",
+  o:["Konsep","Fakta","Prinsip","Prosedur","Masalah Terbuka"]},
+ {l:"HOTS",s:3,q:"Anda menghadapi kelas di mana siswa memiliki kemampuan awal (<em>prior knowledge</em>) matematika yang sangat rendah dan heterogen. Berdasarkan kriteria pemilihan media dan prinsip segmentasi multimedia, tindakan instruksional apa yang harus Anda terapkan pada media ICT Anda?",
+  o:["Menyajikan materi dalam satu video panjang tanpa jeda agar siswa fokus dari awal sampai akhir.","Membagi materi pelajaran ke dalam potongan-potongan kecil (<em>chunking</em>) interaktif yang dikendalikan penuh oleh kecepatan belajar siswa sendiri.","Memberikan aplikasi kalkulator otomatis agar siswa yang tertinggal bisa langsung menyamai nilai temannya.","Menyuguhkan game matematika yang kompleks dan cepat untuk memicu kompetensi tinggi.","Menggunakan teks instruksi yang rumit dan formal agar siswa terbiasa dengan bahasa tingkat tinggi."]},
+ {l:"LOTS",s:5,q:"Fitur utama dalam GeoGebra yang memungkinkan pengguna melihat perubahan objek geometris secara langsung di layar grafis ketika nilai aljabar atau variabelnya digeser pada tombol luncuran dinamakan...",
+  o:["Spreadsheet View","Slider (Tombol Luncuran)","CAS (Computer Algebra System)","Input Bar","3D Graphics Grapher"]},
+ {l:"HOTS",s:5,q:"Seorang guru matematika ingin melatih kemampuan berpikir kritis siswa pada topik <em>Geometri Transformasi (Refleksi)</em>. Cara adaptasi pemanfaatan GeoGebra yang paling tepat dan berpusat pada siswa (<em>Student-Centered</em>) adalah...",
+  o:["Guru memproyeksikan layar GeoGebra miliknya, lalu mendiktekan sifat-sifat refleksi untuk dicatat siswa di buku penjelasannya.","Siswa diberikan lembar kerja digital untuk menggeser koordinat titik asal pada GeoGebra, mengamati perubahan koordinat bayangan, lalu merumuskan sendiri matriks transformasinya.","Guru membagikan file GeoGebra yang sudah jadi dan meminta siswa menghafal visual yang tampak di layar komputer masing-masing.","Menggunakan GeoGebra hanya untuk mencocokkan jawaban akhir dari soal pilihan ganda yang ada di buku paket.","Meminta siswa menuliskan kode pemrograman GeoGebra di kertas lembar tanpa melakukan praktik langsung di komputer."]},
+ {l:"LOTS",s:5,q:"Dalam GeoGebra, window yang berfungsi khusus untuk menginput persamaan matematika formal seperti persamaan lingkaran, matriks, atau fungsi kalkulus secara simbolik disebut...",
+  o:["Graphics View","Algebra View / Input Box","Protocol View","Konstruksi Pad","Toolbar Editor"]},
+ {l:"LOTS",s:6,q:"Aplikasi matematika interaktif berbasis web yang sangat kuat, intuitif, dan populer digunakan khusus untuk mengeksplorasi grafik fungsi, pertidaksamaan, dan kalkulus berbasis fungsi dua dimensi (2D) adalah...",
+  o:["Math Blaster","Desmos","Cabri Geometry","SPSS","Photomath"]},
+ {l:"HOTS",s:6,q:"Guru ingin siswa memahami bagaimana perubahan nilai konstanta <em>c</em> memengaruhi posisi grafik fungsi kuadrat (<em>f</em>(<em>x</em>) = <em>ax</em>² + <em>bx</em> + <em>c</em>). Jika guru mengadaptasi aplikasi Desmos dalam model penemuan terbimbing, instruksi yang paling tepat diberikan kepada siswa adalah...",
+  o:["“Ketik fungsi <em>f</em>(<em>x</em>) = 2<em>x</em>² + 3<em>x</em> + 5, lalu salin grafik yang muncul ke buku tulismu menggunakan penggaris!”","“Ketik fungsi <em>f</em>(<em>x</em>) = <em>x</em>² + <em>c</em>, buatlah slider untuk nilai <em>c</em>, geser ke arah positif dan negatif, lalu simpulkan apa yang terjadi pada arah pergeseran grafik!”","“Lihatlah grafik di layar depan, catat titik puncaknya, lalu hitung secara manual nilai diskriminannya!”","“Gunakan fitur Desmos untuk langsung menghitung turunan pertama fungsi tanpa perlu memahami konsep limit!”","“Hafalkan bentuk grafik dari fungsi <em>f</em>(<em>x</em>) = <em>x</em>² sampai <em>f</em>(<em>x</em>) = 10<em>x</em>² secara bergantian!”"]},
+ {l:"LOTS",s:7,q:"Manakah di bawah ini yang merupakan fitur paling krusial pada sebuah LMS yang dibutuhkan secara spesifik untuk memfasilitasi penulisan rumus, simbol, dan notasi formal matematika?",
+  o:["Fitur unggah foto profil pengguna.","Fitur kalender akademik sekolah.","Fitur Equation Editor / MathJax (LaTeX) Integration.","Fitur ekspor nilai ke format PDF.","Fitur chat room berbasis emotikon."]},
+ {l:"HOTS",s:7,q:"Sebuah sekolah menggunakan platform LMS standar yang tidak mendukung penulisan simbol matematika (LaTeX) dan tidak memiliki papan tulis interaktif (<em>whiteboard</em>). Ketika guru memberikan tugas esai matematika, siswa kesulitan mengetik jawaban dan guru kesulitan memberikan umpan balik koreksi per baris langkah penyelesaian. Dari aspek evaluasi platform dan instruksional, solusi adaptasi jangka pendek yang paling tepat adalah...",
+  o:["Meminta siswa mengetik rumus matematika menggunakan huruf abjad biasa (misal: akar kuadrat ditulis ‘AKAR’).","Menghentikan total penggunaan LMS dan kembali menggunakan metode pengumpulan kertas fisik secara penuh.","Mengintegrasikan LMS tersebut dengan pihak ketiga seperti Google Jamboard/Padlet atau mengarahkan siswa mengunggah foto tulisan tangan rapi.","Meminta siswa mempelajari coding bahasa pemrograman tingkat tinggi untuk membuat dokumen PDF mandiri.","Membiarkan siswa mengosongkan jawaban yang mengandung rumus rumit dan hanya menjawab soal teori."]},
+ {l:"LOTS",s:7,q:"Komponen evaluasi LMS yang mengukur seberapa mudah platform tersebut diakses oleh berbagai perangkat siswa, termasuk gawai dengan spesifikasi rendah dan jaringan internet yang terbatas dinamakan aspek...",
+  o:["Interaktivitas Konten","Aksesibilitas (<em>Accessibility</em>) dan <em>Usability</em>","Keamanan Data (<em>Security</em>)","Estetika Visual (UI Design)","Skalabilitas Penyimpanan"]}
+];
+const SUBLABEL = {1:"Sub-CPMK 1",2:"Sub-CPMK 2",3:"Sub-CPMK 3 & 4",5:"Sub-CPMK 5",6:"Sub-CPMK 6",7:"Sub-CPMK 7"};
+const SUBTITLE = {1:"Konsep dasar dan peran ICT",2:"Kerangka TPACK dan prinsip Multimedia Learning (Mayer)",3:"Prinsip desain multimedia, kriteria pemilihan media, karakteristik materi dan siswa",5:"Eksplorasi dan adaptasi GeoGebra",6:"Kalkulator grafik dan aplikasi interaktif (Desmos, dll.)",7:"Evaluasi platform e-learning/LMS"};
+
+const ESSAY = [
+ {l:"HOTS",sub:"Sub-CPMK 2 & 4",
+  ctx:"Seorang guru matematika SMA merancang modul e-learning untuk topik <em>Barisan dan Deret Geometri</em>. Pada halaman pertama modul digital tersebut, terdapat teks penjelasan rumus sepanjang 3 paragraf, video animasi guru sedang mengajar di papan tulis, rekaman audio penjelasan guru yang membacakan teks paragraf tersebut, serta ilustrasi gambar grafik pertumbuhan bakteri yang berkedip-kedip warna-warni. Setelah dievaluasi, ternyata hasil belajar mandiri siswa justru menurun drastis karena mereka merasa pusing dan bingung.",
+  task:"<b>Tugas Anda:</b> Analisis kasus di atas menggunakan minimal dua prinsip multimedia learning dari Richard E. Mayer dan teori beban kognitif (<em>Cognitive Load Theory</em>). Jelaskan kesalahan desain multimedia guru tersebut dan berikan rekomendasi perbaikannya yang konkret!"},
+ {l:"HOTS",sub:"Sub-CPMK 5 & 6",
+  ctx:"Materi <em>Kalkulus: Menemukan Konsep Luas Daerah di Bawah Kurva (Integral Riemann)</em> sering kali sulit dipahami siswa jika hanya diajarkan dengan rumus integral tentu secara langsung. Anda diminta memanfaatkan software matematika dinamis (GeoGebra atau Desmos) untuk mendesain visualisasi konsep ini.",
+  task:"<b>Tugas Anda:</b> Rancanglah skenario aktivitas pembelajaran (langkah demi langkah) bagaimana Anda mengadaptasi fitur aplikasi pilihan Anda (misalnya penggunaan fungsi barisan persegi panjang/pias atau slider) agar siswa dapat menemukan sendiri konsep bahwa “jika jumlah persegi panjang di bawah kurva mendekati tak hingga, maka jumlah luasnya mendekati luas daerah di bawah kurva sebenarnya”!"},
+ {l:"HOTS",sub:"Sub-CPMK 7",
+  ctx:"Platform <em>Learning Management System</em> (LMS) umum seperti Google Classroom sangat mudah digunakan, namun memiliki keterbatasan bawaan (<em>inherent limitations</em>) yang signifikan dalam mendukung aktivitas pembelajaran matematika yang bersifat kolaboratif dan berbasis pemecahan masalah (Problem-Based Learning).",
+  task:"<b>Tugas Anda:</b> Lakukan evaluasi kritis terhadap platform LMS yang pernah Anda gunakan dalam perkuliahan/sekolah. Uraikan minimal 2 kelemahan platform tersebut khusus untuk konten matematika, lalu berikan gagasan inovatif berupa integrasi <em>tool</em> atau <em>widget</em> eksternal matematika apa saja yang wajib ditambahkan agar platform tersebut menjadi lingkungan e-learning matematika yang ideal!"}
+];
+
+/* ============================================================
+   UTILITAS & PENYIMPANAN
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const L = "ABCDE";
+const pad = n => String(n).padStart(2,"0");
+const fmt = ms => { const s=Math.max(0,Math.ceil(ms/1000)); return pad(Math.floor(s/60))+":"+pad(s%60); };
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DURATION = CONFIG.DURATION_MIN*60000;
+const TOTAL_PG = PG.length;
+const hasFS = !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+
+let memStore = null;
+function load(){ try{ const r=localStorage.getItem(CONFIG.STORAGE_KEY); return r?JSON.parse(r):memStore; }catch(e){ return memStore; } }
+function save(){ memStore = state; try{ localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(state)); }catch(e){} }
+function wipe(){ memStore=null; try{ localStorage.removeItem(CONFIG.STORAGE_KEY); }catch(e){} }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function cyrb53(str,seed=0){ let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed; for(let i=0,ch;i<str.length;i++){ ch=str.charCodeAt(i); h1=Math.imul(h1^ch,2654435761); h2=Math.imul(h2^ch,1597334677);} h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909); h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909); return (4294967296*(2097151&h2)+(h1>>>0)).toString(36).toUpperCase(); }
+
+if (location.search.includes("reset")) { wipe(); history.replaceState(null,"",location.pathname); }
+
+let state = null;         // keadaan ujian
+let cur = 0;              // indeks soal aktif
+let examActive = false;
+let tickId = null;
+let lastViol = 0;
+let wmOn = false;
+
+/* ============================================================
+   ILUSTRASI HERO: pias Riemann di bawah kurva
+   ============================================================ */
+(function drawHero(){
+  const svg=$("plot"), x0=40, x1=390, base=210, N=14, w=(x1-x0)/N;
+  const f = t => 36 + 140*Math.sin(Math.PI*t)*0.92 + 10*t;
+  let h = `<line class="ax" x1="${x0-10}" y1="${base}" x2="${x1+16}" y2="${base}"/><line class="ax" x1="${x0}" y1="${base+8}" x2="${x0}" y2="14"/>`;
+  for(let i=0;i<N;i++){ const t=i/N, hh=f(t); h+=`<rect class="rc" style="animation-delay:${(i*70+300)}ms" x="${x0+i*w}" y="${base-hh}" width="${w}" height="${hh}"/>`; }
+  let d=""; for(let k=0;k<=80;k++){ const t=k/80; d+=(k?"L":"M")+(x0+t*(x1-x0)).toFixed(1)+" "+(base-f(t)).toFixed(1); }
+  h+=`<path class="cv" d="${d}"/>`;
+  svg.innerHTML=h;
+})();
+$("factMin").textContent=CONFIG.DURATION_MIN;
+document.querySelectorAll(".maxv").forEach(e=>e.textContent=CONFIG.MAX_VIOLATIONS);
+if(!CONFIG.INCLUDE_ESSAY){ document.querySelector(".facts li:nth-child(2)").classList.add("hidden"); }
+
+/* ============================================================
+   FORM MULAI
+   ============================================================ */
+const inNama=$("inNama"), inKelas=$("inKelas"), inAgree=$("inAgree"), btnStart=$("btnStart");
+function validateStart(){
+  const ok = inNama.value.trim().length>=3 && inKelas.value.trim().length>=1 && (inAgree.checked || inAgree.disabled);
+  btnStart.disabled = !ok;
+}
+[inNama,inKelas,inAgree].forEach(e=>e.addEventListener("input",validateStart));
+inAgree.addEventListener("change",validateStart);
+
+$("startForm").addEventListener("submit", async ev=>{
+  ev.preventDefault();
+  try{ await onStart(); }
+  catch(err){ console.error(err); $("startErr").textContent="Terjadi kesalahan: "+(err&&err.message||err)+". Coba muat ulang halaman atau buka dengan Chrome/Edge."; }
+});
+let fsRequired = false;
+async function onStart(){
+  $("startErr").textContent="";
+  if(state && !state.finished){ // lanjutkan setelah muat ulang
+    fsRequired = hasFS && await enterFS(); startExam(true); return;
+  }
+  const nama=inNama.value.trim().replace(/\s+/g," "), kelas=inKelas.value.trim().replace(/\s+/g," ");
+  if(nama.length<3||!kelas){ $("startErr").textContent="Isi nama lengkap dan kelas terlebih dahulu."; return; }
+  fsRequired = hasFS && await enterFS(); // bila layar penuh ditolak peramban, ujian tetap jalan dengan proktor lain
+  const ids = [...Array(TOTAL_PG).keys()].map(i=>"p"+(i+1));
+  const order = (CONFIG.SHUFFLE_QUESTIONS?shuffle(ids):ids).concat(CONFIG.INCLUDE_ESSAY?["e1","e2","e3"]:[]);
+  const opt = {}; ids.forEach(id=>{ const a=[0,1,2,3,4]; opt[id]=CONFIG.SHUFFLE_OPTIONS?shuffle(a):a; });
+  const now=Date.now();
+  state = {v:1,nama,kelas,start:now,deadline:now+DURATION,order,opt,ans:{},essay:{},flag:{},viol:[],finished:false};
+  state.fsOk = fsRequired;
+  save(); startExam(false);
+}
+
+function enterFS(){
+  if(!hasFS) return Promise.resolve(true);
+  const el=document.documentElement;
+  const fn = el.requestFullscreen || el.webkitRequestFullscreen;
+  try{ const r=fn.call(el); return Promise.resolve(r).then(()=>true).catch(()=>false); }catch(e){ return Promise.resolve(false); }
+}
+const inFS = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+function exitFS(){ try{ if(inFS()){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); } }catch(e){} }
+
+/* ============================================================
+   MEMULAI / MELANJUTKAN UJIAN
+   ============================================================ */
+function startExam(resumed){
+  $("screen-start").classList.add("hidden");
+  $("screen-result").classList.add("hidden");
+  $("screen-exam").classList.remove("hidden");
+  $("whoName").textContent=state.nama; $("whoClass").textContent=state.kelas;
+  setWatermark();
+  buildGrid();
+  examActive=true;
+  try{ history.pushState({ets:1},"",location.href); }catch(e){}
+  cur = Math.min(state.cur||0, state.order.length-1);
+  renderQ(); updateNav(); updateViolBadge();
+  clearInterval(tickId); tickId=setInterval(tick,250); tick();
+  window.scrollTo(0,0);
+}
+
+function setWatermark(){
+  const t=esc(state.nama+" · "+state.kelas);
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="380" height="220"><text x="190" y="115" text-anchor="middle" transform="rotate(-22 190 110)" font-family="sans-serif" font-size="15" font-weight="600" fill="#13232b" fill-opacity="0.07">${t}</text></svg>`;
+  const w=$("wm"); w.style.backgroundImage=`url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`; w.classList.remove("hidden");
+}
+
+/* ============================================================
+   TIMER
+   ============================================================ */
+let perfStart = performance.now(), elapsedAtLoad = 0;
+function elapsedMs(){
+  const byDate = Date.now()-state.start;
+  const byPerf = elapsedAtLoad + (performance.now()-perfStart);
+  return Math.max(byDate, byPerf); // jam sistem diundur tidak menambah waktu
+}
+function tick(){
+  if(!state||state.finished) return;
+  const remain = DURATION - elapsedMs();
+  const t=$("timer"), b=$("barFill");
+  t.textContent=fmt(remain);
+  b.style.width=Math.max(0,remain/DURATION*100)+"%";
+  const cls = remain<=60000?"crit":remain<=5*60000?"warn":"";
+  t.className="timer "+cls; b.className=cls;
+  if(remain<=0){ finish("waktu"); }
+}
+
+/* ============================================================
+   NAVIGASI & RENDER SOAL
+   ============================================================ */
+const isEssay = id => id[0]==="e";
+function answered(id){ return isEssay(id) ? (state.essay[id]||"").trim().length>0 : state.ans[id]!==undefined; }
+
+function buildGrid(){
+  const pgW=$("gridPG"), esW=$("gridES"); pgW.innerHTML=""; esW.innerHTML="";
+  state.order.forEach((id,i)=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="nb"; b.textContent=i+1; b.dataset.i=i;
+    b.addEventListener("click",()=>go(i));
+    (isEssay(id)?esW:pgW).appendChild(b);
+  });
+  $("essayNavWrap").classList.toggle("hidden", !CONFIG.INCLUDE_ESSAY);
+}
+
+function updateNav(){
+  let d=0,f=0;
+  document.querySelectorAll(".nb").forEach(b=>{
+    const i=+b.dataset.i, id=state.order[i];
+    const done=answered(id), flag=!!state.flag[id];
+    if(done) d++; if(flag) f++;
+    b.className="nb"+(flag?" flag":done?" done":"")+(i===cur?" cur":"");
+    b.setAttribute("aria-label",`Soal ${i+1}, ${flag?"ragu-ragu":done?"sudah dikerjakan":"belum dikerjakan"}${i===cur?", sedang dibuka":""}`);
+    if(i===cur) b.setAttribute("aria-current","true"); else b.removeAttribute("aria-current");
+  });
+  const total=state.order.length;
+  $("cDone").textContent=d; $("cTodo").textContent=total-d; $("cFlag").textContent=f;
+  return {d,t:total-d,f};
+}
+
+function go(i){
+  if(i<0||i>=state.order.length) return;
+  cur=i; state.cur=i; save(); renderQ(); updateNav();
+  const q=$("qcard"); if(window.innerWidth<=980) q.scrollIntoView({block:"start"});
+}
+
+function renderQ(){
+  const id=state.order[cur], essay=isEssay(id), total=state.order.length;
+  const head=$("qhead"), body=$("qbody");
+  let chips="";
+  if(essay){
+    const e=ESSAY[+id.slice(1)-1];
+    chips=`<span class="chip">Esai</span><span class="chip ${e.l.toLowerCase()}">${e.l}</span><span class="chip">${e.sub}</span>`;
+  } else {
+    const q=PG[+id.slice(1)-1];
+    chips=`<span class="chip">Pilihan ganda</span><span class="chip ${q.l.toLowerCase()}">${q.l}</span><span class="chip" title="${esc(SUBTITLE[q.s])}">${SUBLABEL[q.s]}</span>`;
+  }
+  head.innerHTML=`<div class="qno">${cur+1}<small>dari ${total}</small></div>${chips}<span class="chip flagc ${state.flag[id]?"":"hidden"}" id="flagChip">Ragu-ragu</span>`;
+
+  if(essay){
+    const e=ESSAY[+id.slice(1)-1];
+    body.innerHTML=`<div class="qtext"><p>${e.ctx}</p><div class="task">${e.task}</div></div>
+      <div class="essay">
+        <label class="sr" for="essayBox">Jawaban esai nomor ${cur+1}</label>
+        <textarea id="essayBox" placeholder="Ketik jawaban Anda di sini. Fitur tempel (paste) dinonaktifkan." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+        <div class="meta"><span>Tersimpan otomatis saat Anda mengetik.</span><span id="wc">0 kata</span></div>
+      </div>`;
+    const ta=$("essayBox"); ta.value=state.essay[id]||"";
+    const upd=()=>{ const v=ta.value.trim(); $("wc").textContent=(v?v.split(/\s+/).length:0)+" kata"; };
+    upd();
+    ta.addEventListener("input",()=>{ state.essay[id]=ta.value; upd(); save(); updateNav(); });
+  } else {
+    const n=+id.slice(1), q=PG[n-1], ord=state.opt[id];
+    let h=`<div class="qtext"><p>${q.q}</p></div><fieldset class="opts"><legend class="sr">Pilihan jawaban nomor ${cur+1}</legend>`;
+    ord.forEach((orig,pos)=>{
+      const chk = state.ans[id]===orig ? "checked":"";
+      h+=`<label class="opt"><input type="radio" name="ans" value="${orig}" ${chk}><span class="lt">${L[pos]}</span><span class="tx">${q.o[orig]}</span></label>`;
+    });
+    h+="</fieldset>";
+    body.innerHTML=h;
+    body.querySelectorAll("input[name=ans]").forEach(r=>r.addEventListener("change",()=>{
+      state.ans[id]=+r.value; save(); updateNav();
+    }));
+  }
+  $("flagBox").checked=!!state.flag[id];
+  $("btnPrev").disabled = cur===0;
+  $("btnNext").textContent = cur===total-1 ? "Tinjau dan selesaikan" : "Simpan dan lanjut";
+}
+
+$("btnPrev").addEventListener("click",()=>go(cur-1));
+$("btnNext").addEventListener("click",()=>{ if(cur===state.order.length-1) openConfirm(); else go(cur+1); });
+$("flagBox").addEventListener("change",e=>{
+  const id=state.order[cur]; if(e.target.checked) state.flag[id]=true; else delete state.flag[id];
+  $("flagChip").classList.toggle("hidden",!state.flag[id]); save(); updateNav();
+});
+
+/* Pintasan papan ketik: ←/→ pindah soal, A–E pilih jawaban */
+document.addEventListener("keydown",e=>{
+  if(!examActive||isOverlayOpen()) return;
+  const tag=(e.target.tagName||"").toLowerCase();
+  if(tag==="textarea"||e.ctrlKey||e.metaKey||e.altKey) return;
+  if(e.key==="ArrowRight"){ e.preventDefault(); go(cur+1); }
+  else if(e.key==="ArrowLeft"){ e.preventDefault(); go(cur-1); }
+  else{
+    const k=e.key.toUpperCase(), pos=L.indexOf(k), id=state.order[cur];
+    if(k.length===1 && pos>=0 && !isEssay(id)){
+      const orig=state.opt[id][pos]; state.ans[id]=orig; save();
+      const r=document.querySelector(`input[name=ans][value="${orig}"]`); if(r) r.checked=true;
+      updateNav();
+    }
+  }
+});
+
+/* ============================================================
+   KONFIRMASI & SELESAI
+   ============================================================ */
+const isOverlayOpen = () => !$("ovWarn").classList.contains("hidden") || !$("ovConfirm").classList.contains("hidden");
+function openConfirm(){
+  const s=updateNav();
+  $("cfDone").textContent=s.d; $("cfTodo").textContent=s.t; $("cfFlag").textContent=s.f;
+  $("cfHint").textContent = s.t>0||s.f>0 ? "Masih ada soal yang belum dikerjakan atau ditandai ragu-ragu. Periksa dulu sebelum mengumpulkan." : "Semua soal sudah dikerjakan.";
+  $("ovConfirm").classList.remove("hidden"); $("btnCfBack").focus();
+}
+$("btnFinish").addEventListener("click",openConfirm);
+$("btnCfBack").addEventListener("click",()=>$("ovConfirm").classList.add("hidden"));
+$("btnCfOk").addEventListener("click",()=>finish("selesai"));
+
+function scorePG(){
+  let c=0; for(let n=1;n<=TOTAL_PG;n++){ const a=state.ans["p"+n]; if(a!==undefined && L[a]===KEY[n-1]) c++; } return c;
+}
+
+function finish(reason){
+  if(!state||state.finished) return;
+  examActive=false; clearInterval(tickId);
+  state.finished=true; state.reason=reason; state.end=Date.now();
+  state.correct=scorePG(); state.score=Math.round(state.correct/TOTAL_PG*1000)/10;
+  save();
+  $("ovWarn").classList.add("hidden"); $("ovConfirm").classList.add("hidden");
+  exitFS(); showResult(); submitRemote();
+}
+
+/* ============================================================
+   PROKTOR
+   ============================================================ */
+const VIOL_TEXT = {
+  tab:"Anda berpindah tab atau jendela.",
+  blur:"Fokus meninggalkan halaman ujian.",
+  fs:"Anda keluar dari mode layar penuh.",
+  key:"Anda menekan tombol pintasan yang dilarang.",
+  reload:"Halaman ujian dimuat ulang atau ditutup.",
+  print:"Anda menekan tombol tangkapan layar.",
+  nav:"Anda mencoba meninggalkan halaman ujian."
+};
+function violation(type,detail){
+  if(!examActive||!state||state.finished) return;
+  const now=Date.now(); if(now-lastViol<1500){ return; } lastViol=now;
+  state.viol.push({t:new Date().toISOString(),type,detail:detail||VIOL_TEXT[type]||type});
+  save(); updateViolBadge();
+  if(state.viol.length>=CONFIG.MAX_VIOLATIONS){ finish("proctor"); return; }
+  $("ovConfirm").classList.add("hidden");
+  $("warnMsg").textContent=(detail||VIOL_TEXT[type])+" Pelanggaran ini dicatat dan dapat dilihat dosen.";
+  $("warnCount").textContent=`Pelanggaran ${state.viol.length} dari ${CONFIG.MAX_VIOLATIONS}. Pada pelanggaran ke-${CONFIG.MAX_VIOLATIONS}, ujian dihentikan dan jawaban langsung dikumpulkan.`;
+  $("ovWarn").classList.remove("hidden"); $("btnResume").focus();
+}
+function updateViolBadge(){
+  const n=state.viol.length, b=$("violBadge");
+  b.textContent=`Pelanggaran ${n}/${CONFIG.MAX_VIOLATIONS}`; b.classList.toggle("has",n>0);
+}
+$("btnResume").addEventListener("click",async()=>{
+  if(fsRequired && !inFS()){ await enterFS(); }
+  $("ovWarn").classList.add("hidden");
+});
+
+document.addEventListener("visibilitychange",()=>{ if(document.hidden) violation("tab"); });
+window.addEventListener("blur",()=>{ setTimeout(()=>{ if(examActive && !document.hasFocus()) violation("blur"); },60); });
+["fullscreenchange","webkitfullscreenchange"].forEach(ev=>document.addEventListener(ev,()=>{
+  if(examActive && fsRequired && !inFS()) violation("fs");
+}));
+window.addEventListener("popstate",()=>{ if(examActive){ try{ history.pushState({ets:1},"",location.href); }catch(e){} violation("nav"); } });
+window.addEventListener("beforeunload",e=>{ if(examActive){ e.preventDefault(); e.returnValue=""; return ""; } });
+
+/* Blokir salin/tempel/klik kanan/seret/seleksi */
+["copy","cut","paste","dragstart","drop"].forEach(ev=>document.addEventListener(ev,e=>{ if(examActive) e.preventDefault(); },true));
+document.addEventListener("contextmenu",e=>{ if(examActive) e.preventDefault(); },true);
+document.addEventListener("selectstart",e=>{ if(examActive && !/^(textarea|input)$/i.test((e.target.tagName||""))) { if(!(e.target.closest&&e.target.closest("textarea"))) e.preventDefault(); } });
+
+/* Blokir pintasan terlarang */
+document.addEventListener("keydown",e=>{
+  if(!examActive) return;
+  const k=(e.key||"").toLowerCase(), c=e.ctrlKey||e.metaKey, inTA=(e.target.tagName||"").toLowerCase()==="textarea";
+  let bad=false;
+  if(e.key==="F12"||e.key==="F5"||(c&&k==="r")) bad=true;
+  else if(c&&e.shiftKey&&["i","j","c","k","e","m"].includes(k)) bad=true;
+  else if(c&&["u","s","p","o","f","g","h","l","d","b","e","k","j"].includes(k)) bad=true;
+  else if(c&&["c","x","v","a"].includes(k)){ if(!(inTA&&k==="a")){ e.preventDefault(); return; } }
+  else if(e.altKey&&["arrowleft","arrowright"].includes(k)) bad=true;
+  else if(e.key==="Meta"||e.key==="OS"){ e.preventDefault(); violation("key","Anda menekan tombol Windows/Command."); return; }
+  if(bad){ e.preventDefault(); e.stopPropagation(); if(e.key!=="F5"&&!(c&&k==="r")) violation("key",`Anda menekan pintasan terlarang (${e.ctrlKey?"Ctrl+":""}${e.metaKey?"Cmd+":""}${e.shiftKey?"Shift+":""}${e.key.length===1?e.key.toUpperCase():e.key}).`); }
+},true);
+document.addEventListener("keyup",e=>{
+  if(!examActive) return;
+  if(e.key==="PrintScreen"){ try{ navigator.clipboard.writeText(""); }catch(_){} violation("print"); }
+},true);
+
+/* ============================================================
+   HASIL
+   ============================================================ */
+const REASON = {selesai:"Dikumpulkan oleh mahasiswa",waktu:"Waktu habis, dikumpulkan otomatis",proctor:"Dihentikan proktor (batas pelanggaran tercapai)"};
+function payload(){
+  const items=[];
+  for(let n=1;n<=TOTAL_PG;n++){ const id="p"+n,a=state.ans[id]; items.push({no:n,jawaban:a===undefined?null:L[a],benar:a===undefined?null:L[a]===KEY[n-1],urutan_tampil:state.order.indexOf(id)+1}); }
+  const es=CONFIG.INCLUDE_ESSAY?[1,2,3].map(n=>({no:n,jawaban:(state.essay["e"+n]||"").trim()})):[];
+  const body={ujian:"ETS Desain Instruksional Pembelajaran Matematika Berbasis ICT",nama:state.nama,kelas:state.kelas,
+    mulai:new Date(state.start).toISOString(),selesai:new Date(state.end).toISOString(),
+    durasi_dipakai_menit:Math.round((state.end-state.start)/600)/100,status:state.reason,
+    pg_benar:state.correct,pg_total:TOTAL_PG,nilai_pg:state.score,pilihan_ganda:items,esai:es,pelanggaran:state.viol};
+  body.kode=cyrb53(JSON.stringify(body),7);
+  return body;
+}
+function showResult(){
+  $("screen-exam").classList.add("hidden"); $("ovWarn").classList.add("hidden");
+  $("wm").classList.add("hidden"); $("screen-start").classList.add("hidden");
+  $("screen-result").classList.remove("hidden"); window.scrollTo(0,0);
+  const p=payload(), mins=Math.floor((state.end-state.start)/60000), secs=Math.floor(((state.end-state.start)%60000)/1000);
+  $("resTitle").textContent = state.reason==="proctor" ? "Ujian dihentikan" : state.reason==="waktu" ? "Waktu habis" : "Ujian selesai";
+  $("resLead").textContent = `Jawaban ${state.nama} (${state.kelas}) sudah dikumpulkan.`;
+  $("scoreBox").classList.toggle("hidden",!CONFIG.SHOW_SCORE);
+  $("scoreNum").textContent=state.score.toFixed(state.score%1?1:0);
+  $("scoreSub").textContent=`${state.correct} dari ${TOTAL_PG} soal benar`;
+  const esFilled=CONFIG.INCLUDE_ESSAY?[1,2,3].filter(n=>(state.essay["e"+n]||"").trim()).length:0;
+  const vl = state.viol.length ? `<ol class="vlist">${state.viol.map(v=>`<li>${new Date(v.t).toLocaleTimeString("id-ID")} — ${esc(v.detail)}</li>`).join("")}</ol>` : "Tidak ada";
+  $("resTable").innerHTML=
+   `<tr><th>Nama</th><td>${esc(state.nama)}</td></tr><tr><th>Kelas</th><td>${esc(state.kelas)}</td></tr>`+
+   `<tr><th>Status</th><td>${REASON[state.reason]}</td></tr>`+
+   `<tr><th>Waktu dipakai</th><td>${mins} menit ${secs} detik</td></tr>`+
+   `<tr><th>Pilihan ganda terjawab</th><td>${Object.keys(state.ans).length} dari ${TOTAL_PG}</td></tr>`+
+   (CONFIG.INCLUDE_ESSAY?`<tr><th>Esai terisi</th><td>${esFilled} dari 3 (dinilai dosen)</td></tr>`:"")+
+   `<tr><th>Pelanggaran</th><td>${vl}</td></tr>`+
+   `<tr><th>Kode verifikasi</th><td class="code">${p.kode}</td></tr>`;
+  $("resNote").innerHTML="Unduh file hasil dan kirim ke dosen sesuai arahan. Kode verifikasi di atas dipakai dosen untuk memastikan isi file tidak diubah."+(CONFIG.INCLUDE_ESSAY?" Nilai esai belum termasuk.":"");
+}
+function dl(name,text,type){
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+}
+const safe = s => s.replace(/[^\w\-]+/g,"_");
+$("btnDlJson").addEventListener("click",()=>dl(`ETS_${safe(state.kelas)}_${safe(state.nama)}.json`,JSON.stringify(payload(),null,2),"application/json"));
+$("btnDlTxt").addEventListener("click",()=>{
+  const p=payload(); let t=`${p.ujian}\nNama   : ${p.nama}\nKelas  : ${p.kelas}\nMulai  : ${p.mulai}\nSelesai: ${p.selesai}\nStatus : ${REASON[p.status]}\nNilai PG: ${p.nilai_pg} (${p.pg_benar}/${p.pg_total})\nKode   : ${p.kode}\n\n== PILIHAN GANDA ==\n`;
+  p.pilihan_ganda.forEach(i=>{ t+=`${i.no}. ${i.jawaban||"-"}  ${i.benar===null?"":i.benar?"(benar)":"(salah)"}\n`; });
+  if(p.esai.length){ t+="\n== ESAI ==\n"; p.esai.forEach(e=>{ t+=`\nSoal ${e.no}:\n${e.jawaban||"(kosong)"}\n`; }); }
+  t+="\n== PELANGGARAN ==\n"+(p.pelanggaran.length?p.pelanggaran.map(v=>`${v.t}  ${v.detail}`).join("\n"):"Tidak ada")+"\n";
+  dl(`ETS_${safe(state.kelas)}_${safe(state.nama)}.txt`,t,"text/plain");
+});
+$("btnPrint").addEventListener("click",()=>window.print());
+function submitRemote(){
+  if(!CONFIG.SUBMIT_URL) return;
+  const el=$("submitStat"); el.textContent="Mengirim hasil ke server…";
+  fetch(CONFIG.SUBMIT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(payload())})
+   .then(()=>{el.textContent="Hasil terkirim ke server.";}).catch(()=>{el.textContent="Pengiriman otomatis gagal. Unduh file hasil dan kirim manual.";});
+}
+
+/* ============================================================
+   INISIALISASI: lanjutkan sesi jika halaman dimuat ulang
+   ============================================================ */
+(function init(){
+  const s=load();
+  if(!s) return;
+  state=s;
+  if(state.finished){ showResult(); return; }
+  elapsedAtLoad = Date.now()-state.start; perfStart=performance.now();
+  if(elapsedAtLoad>=DURATION){ state.end=Date.now(); examActive=false; state.finished=true; state.reason="waktu"; state.correct=scorePG(); state.score=Math.round(state.correct/TOTAL_PG*1000)/10; save(); showResult(); return; }
+  // pelanggaran muat ulang
+  state.viol.push({t:new Date().toISOString(),type:"reload",detail:VIOL_TEXT.reload});
+  save();
+  if(state.viol.length>=CONFIG.MAX_VIOLATIONS){ state.end=Date.now(); state.finished=true; state.reason="proctor"; state.correct=scorePG(); state.score=Math.round(state.correct/TOTAL_PG*1000)/10; save(); showResult(); return; }
+  inNama.value=state.nama; inKelas.value=state.kelas; inNama.disabled=inKelas.disabled=true;
+  inAgree.checked=true; inAgree.disabled=true; $("agreeRow").classList.add("hidden");
+  $("startTitle").textContent="Lanjutkan ujian";
+  $("startSub").textContent=`Sesi ${state.nama} masih berjalan. Sisa waktu terus berkurang selama halaman tertutup. Muat ulang tercatat sebagai pelanggaran ${state.viol.length} dari ${CONFIG.MAX_VIOLATIONS}.`;
+  btnStart.textContent="Lanjutkan ujian"; btnStart.disabled=false;
+})();
+</script>
+</body>
+</html>
